@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style type="text/css">
+        table {
+            width: 300px;
+            height: 100px;
+            background-color: aqua;
+            border: purple 1px solid;
+            border-collapse: collapse;
+            text-align: center;
+
+            margin:auto;
+        }
+    </style>
+</head>
+
+<body>
+    <!--crear tabla desde 0
+    2 input = 2 filas, 2 columnas e intorucir
+    celda 1.1, celda 1.2....
+    celda 2.1-->
+    <!--otro boton que dice, borrar celdas  con input con fila y column para indicar cual se quiere ..y se tiene que borrar el contenido-->
+
+    <h3>CREAR TABLA</h3>
+    Filas: <input type="text" id='addFila' value="4">
+    Columnas: <input type="text" id='addColumna' value="5">
+    <button onclick="crearTabla()" >CREAR</button>
+
+    <h3>BORRAR CONTENIDO CELDA</h3>
+    Fila: <input type="text" id='removeFila' value="1">
+    Columna: <input type="text" id='removeColumna' value="1">
+    <button onclick="borrarContenido()">BORRAR</button>
+
+    <h3>BORRAR CELDA</h3>
+    Fila: <input type="text" id='removeF' value="1">
+    Columna: <input type="text" id='removeC' value="1">
+    <button onclick="eliminarCelda()">ELIMINAR</button>
+
+    <h3>BORRAR FILA</h3>
+    Fila: <input type="text" id='eliminarF' value="1">
+    <button onclick="eliminarFila()">ELIMINAR FILA</button>
+    
+    <br>
+    <br>
+
+    <div id="d1" ></div>
+
+    <script>
+        function crearTabla() {
+            var tabla = document.createElement("table");
+            tabla.setAttribute("border", "10");
+            tabla.setAttribute("id", "tablita");
+
+            var columns = document.getElementById("addColumna").value;
+            var filas = document.getElementById("addFila").value;
+
+
+            for (var i = 0; i < filas; i++) {
+                var tr = document.createElement("tr");
+                for (var j = 0; j < columns; j++) {
+                    var td = document.createElement("td");
+                    td.setAttribute("id", "f"+i+"c"+j); //id 
+
+                    var textoCelda = document.createTextNode((i) + " . " + (j));//para q empiece por 1, se sujma i+1 y j+1
+
+                    td.appendChild(textoCelda);
+
+                    tr.appendChild(td);
+                }
+                tabla.appendChild(tr);
+            }
+            document.getElementById("d1").appendChild(tabla);
+        }
+
+
+        function borrarContenido() {
+            var td = document.getElementById("removeColumna").value;
+            var tr = document.getElementById("removeFila").value;
+            var table= document.getElementById("tablita").rows[tr].cells[td].textContent= ""  ;     
+        }  
+
+        function eliminarCelda() {
+            var td = document.getElementById("removeC").value;
+            var tr = document.getElementById("removeF").value;
+            
+            document.getElementById("f"+tr+"c"+td).remove();
+        }
+
+        //////////////
+        function eliminarFila() {
+        var tr = document.getElementById("eliminarF").value;
+        document.getElementById("tablita").deleteRow(tr);
+    }
+
+    </script>
+
+</body>
+
+</html>
