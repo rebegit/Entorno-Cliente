@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<!--3.1. Crear un formulario con al menos los siguientes elementos: text, number, checkbox, select, textArea, date, submit. 
+3.2. Realizar la validación HTML5 cuando se pulse el botón de submit, antes de enviar la información al servidor, 
+validando al menos los criterios: required, max, min, minlength, maxlength y pattern. Combinados como se desee en los inputs del form anterior. 
+Marcar el borde de rojo en los inputs inválidos usando Pseudoclases.
+3.3. Realizar la validación usando javascript, también al pulsar en submit y antes de enviar el formulario. Aplicar los mismos criterios del 3.2. 
+Marcar el borde de rojo en los inputs inválidos usando el DOM.
+3.4. En lugar de esperar a rellenar todos los campos y que el usuario haga submit, validad sobre la marcha cada vez que el usuario rellenene 
+un input (usando enventos y basándose en el javascript del 3.3 si se desea).
+3.5. Crear mensajes de error personalizados para la validación HTML5-->
+
+<body>
+    <form name="miformu" action="/action_page.php" onsubmit="return validateForm()" method='post'>
+        <h2>FORMULARIO:</h2>
+        Nombre:<input type="text" id='nombre' name='nombre' minlength="4" ><br>                                          <!--minlength-->
+        Telefono:<input type="text" id='telefono' name='telefono' pattern="[0-9]{9}" title="numero de 9 digitos"><br>   <!--pattern-->
+        Años:<input type="number" id='edad' name='edad' min="18"><br>                                                   <!--min-->
+        Correo:<input type="email" id='email' name='email'><br>
+        Lenguajes:<br>
+        <input type="checkbox" class="check" name="l1" value="english" >
+        <label for="l1">English</label><br>
+        <input type="checkbox"  class="check" name="l2" value="spanish" >
+        <label for="l2">Spanish</label><br>
+        <input type="checkbox" class="check" name="l3" value="german">
+        <label for="l3">German</label><br>
+        Cumpleaños:
+        <input type="date" id="cumple" name="cumple" min="1996-01-01" max="1996-12-12"><br>                            <!--min y max-->
+        Coche:
+        <select id="coches" name="coches" size="4">
+            <option value="volvo">Volvo</option>
+            <option value="saab">Saab</option>
+            <option value="fiat">Fiat</option>
+            <option value="audi">Audi</option>
+        </select>
+        <br>
+        Texto: <textarea name="texto" maxlength="40" required></textarea>                                              <!--maxlength y required-->
+        <br>
+
+        <input type="submit" value="Submit">
+
+    </form>
+
+    <style> /*RESTRICCIONES HTML+CSS*/
+        input:invalid {
+            border-color: red;
+        }
+    </style>
+
+</body>
+
+<script> //AÑADIENDO MAS RESTRICCIONES, USANDO JS
+    function validateForm() {
+
+        let nom = document.forms["miformu"]["nombre"].value;                         //min length
+        if ((nom == "")||(nom.length < 10)) {
+            alert("el nombre tiene que tener al menos de 10 letras");              
+            document.forms["miformu"]["nombre"].style.borderColor = "red";
+            return false;
+        }
+
+        let corr = document.forms["miformu"]["email"].value;                         //como si fuera pattern en js
+        if ((corr == "")||(/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3,4})+$/.test(corr))) {
+            alert("el correo tiene que tener formato xxx@xxx.xxx");                
+            document.forms["miformu"]["email"].style.borderColor = "red";
+            return false;
+        }
+
+        opciones = document.getElementsByClassName("check");                        //requerido
+        var seleccionado = false;
+        for (var i = 0; i < opciones.length; i++) {
+            if (opciones[i].checked) {
+                seleccionado = true;
+                break;
+            }
+        }
+        if (!seleccionado) {
+            alert("seleccione un idioma");           
+            return false;
+        }
+
+        let añ = document.forms["miformu"]["edad"].value;                         //min y max
+        if ((añ =="")||(añ < 20) && (añ > 100)){
+            alert("edad mayor a 20 y menor a 100");              
+            document.forms["miformu"]["edad"].style.borderColor = "red";
+            return false;
+        }
+
+        let texa = document.forms["miformu"]["texto"].value;                     //max length
+        if ((texa =="")||(texa.length > 35)) {                                
+            alert("el area tiene que tener menos de 35 letras");              
+            document.forms["miformu"]["texto"].style.borderColor = "red";
+            return false;
+        }
+    }
+
+//VALIDAR SOBRE LA MARCHA???
+    document.addEventListener("DOMContentLoaded", function(event) {
+     document.getElementById('miformu').addEventListener('submit', validateForm)
+    });
+
+//MENSAJES ERROR PERSONALIZADOS
+const emailf = document.getElementById("email");
+var selectf = document.getElementsByName('coches');
+
+
+    email.addEventListener("input", function (event) {
+    if (email.validity.typeMismatch) {
+        email.setCustomValidity("¡Se esperaba una dirección de correo electrónico!"); //se queda con este y no con los otros alert
+    } else {
+        email.setCustomValidity("");
+    }
+    });
+
+
+    var selectf = document.getElementsByName('coches');
+    select.addEventListener('change', function(evt) {
+    this.setCustomValidity('');
+    });
+    select.addEventListener('invalid', function(evt) {
+    // Required
+    if (this.validity.valueMissing) {
+        this.setCustomValidity('Por favor seleccione el coche!');
+    }
+    });
+
+</script>
+
+</html>
