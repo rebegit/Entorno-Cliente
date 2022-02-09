@@ -21,9 +21,9 @@ un input (usando enventos y basándose en el javascript del 3.3 si se desea).
     <form name="miformu" action="/action_page.php" onsubmit="return validateForm()" method='post'>
         <h2>FORMULARIO:</h2>
         Nombre:<input type="text" id='nombre' name='nombre' minlength="4" ><br>                                          <!--minlength-->
-        Telefono:<input type="text" id='telefono' name='telefono' pattern="[0-9]{9}" title="numero de 9 digitos"><br>   <!--pattern-->
-        Años:<input type="number" id='edad' name='edad' min="18"><br>                                                   <!--min-->
+        Telefono:<input type="text" id='telefono' name='telefono' pattern="[0-9]{9}" ><br>   <!--pattern-->
         Correo:<input type="email" id='email' name='email'><br>
+        Años:<input type="number" id='edad' name='edad' min="18" max="100"><br>                                         <!--min y max-->
         Lenguajes:<br>
         <input type="checkbox" class="check" name="l1" value="english" >
         <label for="l1">English</label><br>
@@ -41,7 +41,7 @@ un input (usando enventos y basándose en el javascript del 3.3 si se desea).
             <option value="audi">Audi</option>
         </select>
         <br>
-        Texto: <textarea name="texto" maxlength="40" required></textarea>                                              <!--maxlength y required-->
+        Texto: <textarea name="texto" maxlength="40" ></textarea>                                              <!--maxlength y required-->
         <br>
 
         <input type="submit" value="Submit">
@@ -50,19 +50,35 @@ un input (usando enventos y basándose en el javascript del 3.3 si se desea).
 
     <style> /*RESTRICCIONES HTML+CSS*/
         input:invalid {
-            border-color: red;
+            /*border-color: red;*/
+            background-color: red;
         }
+        textarea:invalid {
+            /*border-color: red;*/
+            background-color: red;
+        }
+        
     </style>
 
 </body>
 
 <script> //AÑADIENDO MAS RESTRICCIONES, USANDO JS
+
+
     function validateForm() {
 
         let nom = document.forms["miformu"]["nombre"].value;                         //min length
         if ((nom == "")||(nom.length < 10)) {
             alert("el nombre tiene que tener al menos de 10 letras");              
             document.forms["miformu"]["nombre"].style.borderColor = "red";
+            return false;
+        }
+
+
+        let añ = document.forms["miformu"]["edad"].value;                         //min y max
+        if ((añ =="")||(añ < 20) && (añ > 100)){
+            alert("edad mayor a 20 y menor a 100");              
+            document.forms["miformu"]["edad"].style.borderColor = "red";
             return false;
         }
 
@@ -86,12 +102,6 @@ un input (usando enventos y basándose en el javascript del 3.3 si se desea).
             return false;
         }
 
-        let añ = document.forms["miformu"]["edad"].value;                         //min y max
-        if ((añ =="")||(añ < 20) && (añ > 100)){
-            alert("edad mayor a 20 y menor a 100");              
-            document.forms["miformu"]["edad"].style.borderColor = "red";
-            return false;
-        }
 
         let texa = document.forms["miformu"]["texto"].value;                     //max length
         if ((texa =="")||(texa.length > 35)) {                                
@@ -99,38 +109,98 @@ un input (usando enventos y basándose en el javascript del 3.3 si se desea).
             document.forms["miformu"]["texto"].style.borderColor = "red";
             return false;
         }
+
+        let tf = document.forms["miformu"]["telefono"].value;
+        let coche = document.forms["miformu"]["telefono"].value;  
+        let cumplee = document.forms["miformu"]["cumple"].value;  
+        if ((tf == "")||(cumplee == "")||(coche=="")) {
+                alert("faltan: telefono o nacimiento o coche");
+                return false;
+            }
+       
+
     }
 
-//VALIDAR SOBRE LA MARCHA???
-    document.addEventListener("DOMContentLoaded", function(event) {
-     document.getElementById('miformu').addEventListener('submit', validateForm)
-    });
+//VALIDAR SOBRE LA MARCHA
+
+        const inputs=document.querySelectorAll('input')
+
+        const expresiones = {
+
+        nombre: /^[a-zA-ZÀ-ÿ\s]{1,40}$/, // Letras y espacios
+        correo: /^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$/,
+        telefono: /^\d{9}$/, // 9 digitios
+        areadeTexto: /^[a-zA-ZÀ-ÿ\s]{4,16}$/
+
+        }
+
+        const validarFormularioMomento = (e) => {
+            switch (e.target.name) {  //valor name del input
+                case "nombre":
+
+                    if (expresiones.nombre.test(e.target.value)) {
+                        document.forms["miformu"]["nombre"].style.borderColor = "yellow";
+                    } else {
+                        document.forms["miformu"]["nombre"].style.borderColor = "blue";
+
+                    }
+                    break;
+
+                case "telefono":
+                    if (expresiones.telefono.test(e.target.value)) {
+                        document.forms["miformu"]["telefono"].style.borderColor = "yellow";
+                    } else {
+                        document.forms["miformu"]["telefono"].style.borderColor = "blue";
+
+                    }
+                    break;
+                case "email":
+                    if (expresiones.correo.test(e.target.value)) {
+                        document.forms["miformu"]["email"].style.borderColor = "yellow";
+                    } else {
+                        document.forms["miformu"]["email"].style.borderColor = "blue";
+                    }
+
+                    break;
+                case 'texto':
+                    if (expresiones.areadeTexto.test(e.target.value)) {
+                        document.forms["miformu"]["texto"].style.borderColor = "yellow";
+                    } else {
+                        document.forms["miformu"]["texto"].style.borderColor = "blue";
+                        areatexto.setCustomValidity("No se permiten numeros")
+                    }
+                    break;
+            }
+
+        }
+
+        inputs.forEach((input) => {
+        input.addEventListener('keyup', validarFormularioMomento)
+        input.addEventListener('blur', validarFormularioMomento)
+        })
 
 //MENSAJES ERROR PERSONALIZADOS
-const emailf = document.getElementById("email");
-var selectf = document.getElementsByName('coches');
+    const tf = document.getElementById("telefono");
+
+    tf.addEventListener("keyup", function (event) {
+        if (tf.validity.patternMismatch) {
+            tf.setCustomValidity("9 digitos!!!"); 
+        } else {
+            tf.setCustomValidity("");
+        }
+        });
 
 
-    email.addEventListener("input", function (event) {
-    if (email.validity.typeMismatch) {
-        email.setCustomValidity("¡Se esperaba una dirección de correo electrónico!"); //se queda con este y no con los otros alert
-    } else {
-        email.setCustomValidity("");
-    }
-    });
+    const emailf = document.getElementById("email");
+        email.addEventListener("input", function (event) {
+        if (email.validity.typeMismatch) {
+            email.setCustomValidity("¡Se esperaba una dirección de correo electrónico!"); //se queda con este y no con los otros alert
+        } else {
+            email.setCustomValidity("");
+        }
+        });
 
-
-    var selectf = document.getElementsByName('coches');
-    select.addEventListener('change', function(evt) {
-    this.setCustomValidity('');
-    });
-    select.addEventListener('invalid', function(evt) {
-    // Required
-    if (this.validity.valueMissing) {
-        this.setCustomValidity('Por favor seleccione el coche!');
-    }
-    });
-
+        
 </script>
 
 </html>
