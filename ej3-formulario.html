@@ -21,7 +21,7 @@ un input (usando enventos y basándose en el javascript del 3.3 si se desea).
     <form name="miformu" action="/action_page.php" onsubmit="return validateForm()" method='post'>
         <h2>FORMULARIO:</h2>
         Nombre:<input type="text" id='nombre' name='nombre' minlength="4" ><br>                                          <!--minlength-->
-        Telefono:<input type="text" id='telefono' name='telefono' pattern="[0-9]{9}" ><br>   <!--pattern-->
+        Telefono:<input type="text" id='telefono' name='telefono' pattern="[0-9]{9}" ><br>                               <!--pattern-->
         Correo:<input type="email" id='email' name='email'><br>
         Años:<input type="number" id='edad' name='edad' min="18" max="100"><br>                                         <!--min y max-->
         Lenguajes:<br>
@@ -194,7 +194,7 @@ un input (usando enventos y basándose en el javascript del 3.3 si se desea).
     const emailf = document.getElementById("email");
         email.addEventListener("input", function (event) {
         if (email.validity.typeMismatch) {
-            email.setCustomValidity("¡Se esperaba una dirección de correo electrónico!"); //se queda con este y no con los otros alert
+            email.setCustomValidity("¡Se esperaba una dirección de correo electrónico!"); 
         } else {
             email.setCustomValidity("");
         }
